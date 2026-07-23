@@ -1,0 +1,210 @@
+/* Ana Kart Kapsayıcı */
+.kripto-kart {
+  width: 100%;
+  max-width: 580px;
+  background: #0d0b14;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 24px;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Başlık Alanı */
+.kripto-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.kripto-baslik-sol {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kripto-kilit-ikon {
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(0 0 4px rgba(0, 255, 204, 0.4));
+}
+
+.kripto-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Sağ Üstteki Durum Rozeti (Badge) */
+.kripto-durum-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  letter-spacing: 0.8px;
+}
+
+.kripto-durum-badge.eksik {
+  background: rgba(255, 74, 107, 0.05);
+  border: 1px solid rgba(255, 74, 107, 0.15);
+  color: #8a8994;
+}
+
+.kripto-durum-badge.aktif {
+  background: rgba(0, 255, 204, 0.05);
+  border: 1px solid rgba(0, 255, 204, 0.15);
+  color: #00ffcc;
+}
+
+/* CRT/Terminal Ekranı Görünümü (Scanline Efektli) */
+.kripto-ekran {
+  position: relative;
+  background: #050409;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 36px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+/* CRT Yatay Çizgi Efekti (Scanlines) */
+.scanline {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+}
+
+/* Placeholder Yazı Tipi ve Boyutu */
+.kripto-placeholder {
+  font-family: monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: #3b3a4a;
+  letter-spacing: 2px;
+}
+
+.kripto-uretilmis-sifre {
+  font-family: monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: #00ffcc;
+  letter-spacing: 2.5px;
+  text-shadow: 0 0 8px rgba(0, 255, 204, 0.4);
+}
+
+/* Ekran İçi Aksiyon Butonları */
+.kripto-aksiyonlar {
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+
+.kripto-ekran-btn {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #8f8f9d;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.kripto-ekran-btn:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.kripto-kopyala-btn {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #3d3c4d;
+  padding: 0 18px;
+  height: 38px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.kripto-kopyala-btn.aktif {
+  color: #8f8f9d;
+  cursor: pointer;
+}
+
+.kripto-kopyala-btn.aktif:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.kopyala-daire {
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* İki Sütunlu Alt Panel */
+.kripto-detaylar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.kripto-detay-kutu {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detay-etiket {
+  font-size: 10px;
+  font-weight: 700;
+  color: #555464;
+  letter-spacing: 1px;
+}
+
+.detay-ana-deger {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.detay-alt-yorum {
+  font-size: 11px;
+  color: #4a4959;
+}
+
+/* Kaydetme Butonu Hover Efekti */
+.kripto-kaydet-btn:not(:disabled):hover {
+  opacity: 0.9;
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+}

@@ -1,0 +1,189 @@
+/* Sayfa ortalama tasarımı */
+.ayarlar-kapsayici {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 20px;
+}
+
+/* Ana Kart */
+.ayarlar-kart {
+  width: 100%;
+  max-width: 580px;
+  background: #0d0b14; /* Koyu arka plan */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 255, 204, 0.03);
+  overflow: hidden;
+}
+
+/* Başlık Alanı */
+.ayarlar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.baslik-sol {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ayar-ikon {
+  font-size: 22px;
+  color: var(--neon-cyan, #00ffcc);
+}
+
+.ayarlar-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary, #ffffff);
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* İçerik Alanı */
+.ayarlar-icerik {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Ayar Grupları */
+.ayar-grubu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ayar-etiket {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 1.5px;
+}
+
+/* Açıklama Metni */
+.ayar-aciklama {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 4px 0 0 0;
+  line-height: 1.4;
+}
+
+/* Select Yapısı */
+.select-kapsayici {
+  position: relative;
+  width: 100%;
+}
+
+.ayar-select {
+  width: 100%;
+  padding: 14px 16px;
+  background: #14121f; /* Seçim kutusunun kapalıyken arka planı */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: var(--text-primary, #ffffff);
+  font-size: 14px;
+  appearance: none; /* Varsayılan ok işaretini kaldırır */
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ayar-select:focus {
+  border-color: var(--neon-cyan, #00ffcc);
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.15);
+}
+
+/* Tıklandığında açılan listenin (opsiyonların) arka planını ve yazı rengini tarayıcıya zorla kabul ettiriyoruz */
+.ayar-select option {
+  background: #14121f; /* Açılan listenin arka planını koyulaştırır */
+  color: #ffffff; /* Yazıları görünür beyaz yapar */
+  padding: 10px;
+}
+
+/* Özel ok ikonu ekleme */
+.select-kapsayici::after {
+  content: "▼";
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Slider Alanı */
+.etiket-satiri {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sure-deger {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--neon-cyan, #00ffcc);
+}
+
+.slider-kapsayici {
+  margin-top: 6px;
+}
+
+.ayar-slider {
+  width: 100%;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+/* Slider Yuvarlağı (Thumb) Tasarımı */
+.ayar-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--neon-cyan, #00ffcc);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--neon-cyan, #00ffcc);
+  transition: transform 0.1s;
+}
+
+.ayar-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Durum Çubuğu */
+.durum-cubugu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 255, 204, 0.03);
+  border: 1px solid rgba(0, 255, 204, 0.12);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 8px;
+}
+
+.durum-nokta {
+  width: 8px;
+  height: 8px;
+  background: var(--neon-cyan, #00ffcc);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--neon-cyan, #00ffcc);
+}
+
+.durum-metin {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--neon-cyan, #00ffcc);
+}

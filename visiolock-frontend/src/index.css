@@ -1,0 +1,33 @@
+:root {
+  --bg-main: #06050b;
+  --bg-card: rgba(14, 12, 26, 0.75);
+  --border-color: rgba(0, 255, 204, 0.12);
+  --border-glow: rgba(0, 255, 204, 0.3);
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --neon-cyan: #00ffcc;
+  --neon-purple: #9d4edd;
+  --neon-red: #ff3366;
+
+  --font-sans: 'Inter', sans-serif;
+  --font-cyber: 'Orbitron', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+}
+
+input, button {
+  font-family: var(--font-sans);
+}

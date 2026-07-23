@@ -1,0 +1,65 @@
+.geri-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.geri-btn:hover {
+  color: var(--neon-cyan);
+}
+
+.detay-alt {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.sifre-kutusu {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 16px 20px;
+  max-width: 400px;
+  margin-bottom: 16px;
+}
+
+.sifre-metni {
+  flex: 1;
+  font-family: monospace;
+  font-size: 18px;
+  color: var(--neon-cyan);
+  letter-spacing: 2px;
+}
+
+.ikon-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.ikon-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--neon-cyan);
+}
+
+.birincil-btn {
+  background: var(--neon-cyan);
+  color: #06050b;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.birincil-btn:hover {
+  opacity: 0.85;
+}
