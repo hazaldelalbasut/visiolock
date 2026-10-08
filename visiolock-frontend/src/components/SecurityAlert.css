@@ -1,0 +1,108 @@
+.security-alert-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  line-height: 1.4;
+  animation: fadeInDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-content-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.alert-icon {
+  font-size: 20px;
+}
+
+.alert-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.alert-title {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 2px;
+  letter-spacing: 0.3px;
+}
+
+.alert-message {
+  opacity: 0.9;
+}
+
+.alert-close-btn {
+  background: transparent;
+  border: none;
+  color: currentColor;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0.6;
+  padding: 4px;
+  transition: opacity 0.2s;
+}
+
+.alert-close-btn:hover {
+  opacity: 1;
+}
+
+/* 🚨 1. Genel Hata (Red/Kırmızı) */
+.security-alert-box.alert-error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+}
+.alert-error .alert-title {
+  color: #ef4444;
+}
+
+/* ⏳ 2. Rate Limit (Orange/Turuncu) */
+.security-alert-box.alert-ratelimit {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fcd34d;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+}
+.alert-ratelimit .alert-title {
+  color: #f59e0b;
+}
+
+/* ⚡ 3. Başarı (Neon Turkuaz) */
+.security-alert-box.alert-success {
+  background: rgba(0, 255, 200, 0.1);
+  border: 1px solid rgba(0, 255, 200, 0.4);
+  color: #00ffc8;
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.12);
+}
+.alert-success .alert-title {
+  color: #00ffc8;
+}
+
+/* 🛡️ 4. Uyarı (Mor) */
+.security-alert-box.alert-warning {
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #e9d5ff;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.15);
+}
+.alert-warning .alert-title {
+  color: #c084fc;
+}

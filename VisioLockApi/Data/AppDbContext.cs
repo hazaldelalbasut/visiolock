@@ -9,6 +9,6 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<SifreKaydi> SifreKayitlari { get; set; }
-    public DbSet<Kullanici> Kullanicilar { get; set; }
+    public DbSet<PasswordRecord> PasswordRecords { get; set; }
+    public DbSet<User> Users { get; set; }
 }

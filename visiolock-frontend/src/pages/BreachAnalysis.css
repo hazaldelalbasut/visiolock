@@ -1,0 +1,121 @@
+.sizinti-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 28px;
+  background: #12131c; /* Koyu matris arka planı */
+  border: 1px solid #232538;
+  border-radius: 16px;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.sizinti-aciklama {
+  color: #94a3b8;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.sizinti-form {
+  display: flex;
+  gap: 12px;
+}
+
+.sizinti-input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #2e3148;
+  background: #1a1b29;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.sizinti-input:focus {
+  border-color: #00ffc8; /* Matris turkuazı odaklama rengi */
+}
+
+.sizinti-btn {
+  padding: 12px 22px;
+  border-radius: 10px;
+  background: #00ffc8; /* Görseldeki Neon Turkuaz */
+  color: #0a0b10; /* Koyu metin okunabilirlik için */
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 12px rgba(0, 255, 200, 0.25);
+}
+
+.sizinti-btn:hover {
+  background: #00e6b4;
+  box-shadow: 0 0 18px rgba(0, 255, 200, 0.4);
+}
+
+.sizinti-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.sizinti-hata {
+  margin-top: 18px;
+  padding: 14px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.sizinti-sonuc {
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* GÜVENLİ STATUS: Neon Turkuaz Çerçeve ve Işıma */
+.sizinti-sonuc.güvenli {
+  background: rgba(0, 255, 200, 0.05);
+  color: #00ffc8;
+  border: 1px solid rgba(0, 255, 200, 0.3);
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.08);
+}
+
+.sizinti-sonuc.güvenli h4 {
+  margin: 0 0 8px 0;
+  color: #00ffc8;
+}
+
+.sizinti-sonuc.güvenli p {
+  margin: 0;
+  color: #e2e8f0;
+}
+
+/* TEHLİKELİ STATUS: Mor/Kırmızı Vurgu */
+.sizinti-sonuc.tehlikeli {
+  background: rgba(168, 85, 247, 0.08);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.1);
+}
+
+.sizinti-sonuc.tehlikeli h4 {
+  margin: 0 0 8px 0;
+  color: #a855f7;
+}
+
+.sizinti-sonuc.tehlikeli p {
+  margin: 0;
+  color: #f3e8ff;
+}
+
+.sizinti-sonuc.analiz_tamamlandi {
+  background: #1a1b29;
+  color: #94a3b8;
+  border: 1px solid #2e3148;
+}

@@ -1,12 +1,15 @@
-using Microsoft.EntityFrameworkCore;
-using VisioLockApi.Data;
-using VisioLockApi.Models;
-using BCrypt.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using VisioLockApi.Data;
+using VisioLockApi.Repositories;
+using VisioLockApi.Services;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
@@ -15,12 +18,37 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader());
 });
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<PasswordRepository>();
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddControllers();
+
+// Dış API (HIBP) istekleri için HttpClient servisi
+builder.Services.AddHttpClient();
+
+// RATE LIMITER SERVİSİ (Brute-force Koruması)
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync(
+            "{\"error\":\"Güvenlik nedeniyle çok fazla deneme yaptınız. Lütfen 1 dakika sonra tekrar deneyin.\"}",
+            cancellationToken);
+    };
+
+    options.AddFixedWindowLimiter("LoginProtection", opt =>
+    {
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.PermitLimit = 5;
+        opt.QueueLimit = 0;
+    });
+});
 
 var jwtSecretKey = builder.Configuration["Jwt:SecretKey"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
@@ -45,111 +73,13 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
 app.UseCors("FrontendPolicy");
+
+// Rate Limiter Middleware'ini Devreye Al
+app.UseRateLimiter();
+
 app.UseAuthentication();
 app.UseAuthorization();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapPost("/api/auth/register", async (RegisterIstek istek, AppDbContext db) =>
-{
-    var mevcutKullanici = await db.Kullanicilar
-        .FirstOrDefaultAsync(k => k.Email == istek.Email);
-
-    if (mevcutKullanici != null)
-    {
-        return Results.BadRequest(new { hata = "Bu email zaten kayıtlı" });
-    }
-
-    var yeniKullanici = new Kullanici
-    {
-        Email = istek.Email,
-        SifreHash = BCrypt.Net.BCrypt.HashPassword(istek.Sifre),
-        OlusturmaTarihi = DateTime.UtcNow
-    };
-
-    db.Kullanicilar.Add(yeniKullanici);
-    await db.SaveChangesAsync();
-
-    return Results.Created($"/api/auth/register/{yeniKullanici.Id}", new
-    {
-        id = yeniKullanici.Id,
-        email = yeniKullanici.Email
-    });
-});
-
-app.MapPost("/api/sifreler", async (SifreKaydi yeniKayit, AppDbContext db) =>
-{
-    yeniKayit.OlusturmaTarihi = DateTime.UtcNow;
-    db.SifreKayitlari.Add(yeniKayit);
-    await db.SaveChangesAsync();
-    return Results.Created($"/api/sifreler/{yeniKayit.Id}", yeniKayit);
-});
-app.MapGet("/api/sifreler/{kullaniciId}", async (int kullaniciId, AppDbContext db) =>
-{
-    var kayitlar = await db.SifreKayitlari
-        .Where(k => k.KullaniciId == kullaniciId)
-        .Select(k => new {
-            k.Id, k.HizmetAdi, k.KullaniciAdiHizmette,
-            k.MatrixBoyutu, k.EntropiBit, k.OlusturmaTarihi
-        })
-        .ToListAsync();
-    return Results.Ok(kayitlar);
-});
-app.MapGet("/api/sifreler/kayit/{id}", async (int id, AppDbContext db) =>
-{
-    var kayit = await db.SifreKayitlari.FindAsync(id);
-    if (kayit == null) return Results.NotFound();
-
-    return Results.Ok(new {
-        kayit.Id, kayit.HizmetAdi, kayit.KullaniciAdiHizmette,
-        kayit.MatrixBoyutu, kayit.OlusturmaTarihi
-    });
-});
-
-app.MapPost("/api/sifreler/{id}/dogrula", async (int id, DogrulamaIstek istek, AppDbContext db) =>
-{
-    var kayit = await db.SifreKayitlari.FindAsync(id);
-
-    if (kayit == null)
-    {
-        return Results.NotFound();
-    }
-
-    bool eslesiyor = kayit.DogrulamaHash == istek.HesaplananHash;
-    return Results.Ok(new { basarili = eslesiyor });
-});
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
-
-record DogrulamaIstek(string HesaplananHash);
-record RegisterIstek(string Email, string Sifre);

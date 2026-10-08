@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\Desktop\\visiolock_proje\\VisioLockApi\\VisioLockApi.csproj": {}
+    "C:\\Users\\User\\Desktop\\visiolock_proje\\visiolockApi\\VisioLockApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\Desktop\\visiolock_proje\\VisioLockApi\\VisioLockApi.csproj": {
+    "C:\\Users\\User\\Desktop\\visiolock_proje\\visiolockApi\\VisioLockApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Desktop\\visiolock_proje\\VisioLockApi\\VisioLockApi.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\visiolock_proje\\visiolockApi\\VisioLockApi.csproj",
         "projectName": "VisioLockApi",
-        "projectPath": "C:\\Users\\User\\Desktop\\visiolock_proje\\VisioLockApi\\VisioLockApi.csproj",
+        "projectPath": "C:\\Users\\User\\Desktop\\visiolock_proje\\visiolockApi\\VisioLockApi.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Desktop\\visiolock_proje\\VisioLockApi\\obj\\",
+        "outputPath": "C:\\Users\\User\\Desktop\\visiolock_proje\\visiolockApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

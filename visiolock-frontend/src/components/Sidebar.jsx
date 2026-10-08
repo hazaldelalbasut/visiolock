@@ -1,6 +1,6 @@
 import './Sidebar.css'
 
-function Sidebar({ aktifSayfa, setAktifSayfa }) {
+function Sidebar({ activePage, setActivePage, onLogout }) {
   return (
     <div className="sidebar">
       <div className="sidebar-logo">
@@ -8,28 +8,38 @@ function Sidebar({ aktifSayfa, setAktifSayfa }) {
       </div>
       <div className="sidebar-menu">
         <p
-          className={aktifSayfa === 'giris' ? 'menu-item aktif' : 'menu-item'}
-          onClick={() => setAktifSayfa('giris')}
+          className={activePage === 'giris' ? 'menu-item aktif' : 'menu-item'}
+          onClick={() => setActivePage('giris')}
         >
           Giriş
         </p>
         <p
           className={
-            aktifSayfa === 'sifrelerim' || aktifSayfa === 'sifredetay'
+            activePage === 'sifrelerim' || activePage === 'sifredetay'
               ? 'menu-item aktif'
               : 'menu-item'
           }
-          onClick={() => setAktifSayfa('sifrelerim')}
+          onClick={() => setActivePage('sifrelerim')}
         >
           Şifrelerim
         </p>
         <p
-          className={aktifSayfa === 'ayarlar' ? 'menu-item aktif' : 'menu-item'}
-          onClick={() => setAktifSayfa('ayarlar')}
+          className={activePage === 'sizintiAnalizi' ? 'menu-item aktif' : 'menu-item'}
+          onClick={() => setActivePage('sizintiAnalizi')}
+        >
+          🔍 Sızıntı Analizi
+        </p>
+        <p
+          className={activePage === 'ayarlar' ? 'menu-item aktif' : 'menu-item'}
+          onClick={() => setActivePage('ayarlar')}
         >
           Ayarlar
         </p>
       </div>
+
+      <button className="cikis-btn" onClick={onLogout}>
+        🚪 Çıkış Yap
+      </button>
     </div>
   )
 }

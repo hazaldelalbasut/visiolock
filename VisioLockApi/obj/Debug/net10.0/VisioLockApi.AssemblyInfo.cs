@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VisioLockApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+84e9e43d89241a056902745ab03ade5dbc59ef5c")]
 [assembly: System.Reflection.AssemblyProductAttribute("VisioLockApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VisioLockApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

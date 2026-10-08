@@ -1,124 +1,202 @@
 import { useState, useEffect } from 'react'
 import Sidebar from './components/Sidebar'
 import Login from './pages/Login'
-import Giris from './pages/Giris'
-import Sifrelerim from './pages/Sifrelerim'
-import SifreDetay from './pages/SifreDetay'
-import Ayarlar from './pages/Ayarlar'
+import Register from './pages/Register'
+import NewPassword from './pages/NewPassword'
+import Passwords from './pages/Passwords'
+import PasswordDetail from './pages/PasswordDetail'
+import Settings from './pages/Settings'
+import BreachAnalysis from './pages/BreachAnalysis'
+import ProtectedRoute from './components/ProtectedRoute'
 import './App.css'
 
 function App() {
-  const [aktifSayfa, setAktifSayfa] = useState('login')
+  const [token, setToken] = useState(localStorage.getItem('token') || null)
+  const [userId, setUserId] = useState(localStorage.getItem('userId') || null)
+
+  // Sayfa yüklendiğinde token varsa 'giris', yoksa 'login'
+  const [activePage, setActivePage] = useState(localStorage.getItem('token') ? 'giris' : 'login')
   const [matrixSize, setMatrixSize] = useState(4)
-  const [seciliSifreId, setSeciliSifreId] = useState(null)
-  const [bildirim, setBildirim] = useState(null)
+  const [selectedPasswordId, setSelectedPasswordId] = useState(null)
+  const [savedPasswords, setSavedPasswords] = useState([])
 
-  // Kaydedilen şifreler artık backend'den gelecek, boş başlıyor
-  const [kaydedilenSifreler, setKaydedilenSifreler] = useState([])
+  // Giriş başarılı olduğunda çağrılıyor (Login.jsx'ten)
+  function onLoginBasarili(incomingToken, incomingUserId) {
+    localStorage.setItem('token', incomingToken)
+    localStorage.setItem('userId', incomingUserId)
+    setToken(incomingToken)
+    setUserId(incomingUserId)
+    setActivePage('giris')
+  }
 
-  // Sayfa açıldığında backend'den listeyi çek
+  // Oturumu kapatma fonksiyonu
+  function handleCikisYap() {
+    localStorage.removeItem('token')
+    localStorage.removeItem('userId')
+    setToken(null)
+    setUserId(null)
+    setActivePage('login')
+  }
+
+  // Kullanıcı ve Token kontrol edilerek listeyi çekme
   useEffect(() => {
+    if (!userId || !token) return
+
     async function listeyiGetir() {
       try {
-        const response = await fetch('http://localhost:5184/api/sifreler/1')
-        const veri = await response.json()
-        setKaydedilenSifreler(veri)
-      } catch (hata) {
-        console.error('Liste alınamadı:', hata)
+        const response = await fetch('http://localhost:5184/api/passwords', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+
+        // Eğer Token geçersiz veya süresi dolmuşsa (401) oturumu kapat
+        if (response.status === 401) {
+          console.warn("Oturum süresi dolmuş veya yetkisiz erişim. Çıkış yapılıyor...")
+          handleCikisYap()
+          return
+        }
+
+        if (!response.ok) {
+          throw new Error(`Sunucu hatası: ${response.status}`)
+        }
+
+        const data = await response.json()
+        setSavedPasswords(data)
+      } catch (error) {
+        console.error('Liste alınamadı:', error.message)
       }
     }
     listeyiGetir()
-  }, [])
+  }, [userId, token])
 
-  // Yeni şifre kaydetme fonksiyonu — artık gerçek backend'e gönderiyor
-  async function sifreKaydet(veri) {
+  async function sifreKaydet(data) {
     try {
-      const response = await fetch('http://localhost:5184/api/sifreler', {
+      const response = await fetch('http://localhost:5184/api/passwords', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
-          kullaniciId: 1,
-          hizmetAdi: veri.hizmetAdi,
-          kullaniciAdiHizmette: veri.kullaniciAdiHizmette,
-          matrixBoyutu: veri.matrixSize,
-          entropiBit: veri.entropiBit,
-          dogrulamaHash: veri.dogrulamaHash
+          serviceName: data.serviceName,
+          serviceUsername: data.serviceUsername,
+          matrixSize: data.matrixSize,
+          entropyBits: data.entropyBits,
+          verificationHash: data.verificationHash,
+          hint: data.hint
         })
       })
 
+      if (response.status === 401) {
+        handleCikisYap()
+        throw new Error('Oturum süreniz doldu, lütfen tekrar giriş yapın.')
+      }
+
       if (!response.ok) throw new Error('Kayıt başarısız')
 
-      const kaydedilenVeri = await response.json()
-      setKaydedilenSifreler([...kaydedilenSifreler, kaydedilenVeri])
-      setBildirim('Şifre başarıyla kasanıza kaydedildi!')
-      setTimeout(() => setBildirim(null), 2500)
-      setAktifSayfa('sifrelerim')
-    } catch (hata) {
-      setBildirim('Hata: ' + hata.message)
-      setTimeout(() => setBildirim(null), 3000)
+      const savedRecord = await response.json()
+      setSavedPasswords(prev => [...prev, savedRecord])
+      alert('Şifre başarıyla kasanıza kaydedildi!')
+      setActivePage('sifrelerim')
+    } catch (error) {
+      alert('Kayıt sırasında bir hata oluştu: ' + error.message)
     }
   }
 
   function sifreDetayinaGit(id) {
-    setSeciliSifreId(id)
-    setAktifSayfa('sifreDetay')
+    setSelectedPasswordId(id)
+    setActivePage('sifreDetay')
+  }
+
+  async function sifreSil(id) {
+    try {
+      const response = await fetch(`http://localhost:5184/api/passwords/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+
+      if (response.status === 401) {
+        handleCikisYap()
+        throw new Error('Oturum süreniz doldu.')
+      }
+
+      if (!response.ok) throw new Error('Silme başarısız')
+
+      setSavedPasswords(prev => prev.filter((s) => s.id !== id))
+    } catch (error) {
+      alert('Silme hatası: ' + error.message)
+    }
   }
 
   return (
     <div className="app">
-      {bildirim && (
-        <div style={{
-          position: 'fixed',
-          top: '24px',
-          right: '24px',
-          background: '#0d0b14',
-          border: '1px solid #00ffcc',
-          color: '#00ffcc',
-          padding: '14px 20px',
-          borderRadius: '8px',
-          fontSize: '14px',
-          fontWeight: '600',
-          boxShadow: '0 0 20px rgba(0, 255, 204, 0.2)',
-          zIndex: 9999
-        }}>
-          {bildirim}
-        </div>
-      )}
-      {aktifSayfa !== 'login' && (
-        <Sidebar aktifSayfa={aktifSayfa} setAktifSayfa={setAktifSayfa} />
+      {/* Login ve Register sayfalarında Sidebar gizlenir */}
+      {activePage !== 'login' && activePage !== 'register' && (
+        <Sidebar
+          activePage={activePage}
+          setActivePage={setActivePage}
+          onLogout={handleCikisYap}
+        />
       )}
 
       <div className="content">
-        {aktifSayfa === 'login' && (
-          <Login setAktifSayfa={setAktifSayfa} />
-        )}
-
-        {/* Giris bileşenine şifre kaydetme yeteneği verdik */}
-        {aktifSayfa === 'giris' && (
-          <Giris
-            matrixSize={matrixSize}
-            sifreKaydet={sifreKaydet}
+        {/* PUBLIC SAYFALAR */}
+        {activePage === 'login' && (
+          <Login
+            onLoginSuccess={onLoginBasarili}
+            onGoToRegister={() => setActivePage('register')}
           />
         )}
 
-        {/* Şifrelerim bileşenine backend'den gelen şifre listesini gönderdik */}
-        {aktifSayfa === 'sifrelerim' && (
-          <Sifrelerim
-            sifrelerimListesi={kaydedilenSifreler}
-            sifreDetayinaGit={sifreDetayinaGit}
+        {activePage === 'register' && (
+          <Register
+            onGoToLogin={() => setActivePage('login')}
           />
         )}
 
-        {aktifSayfa === 'sifreDetay' && (
-          <SifreDetay
-            seciliSifreId={seciliSifreId}
-            matrixSize={matrixSize}
-            setAktifSayfa={setAktifSayfa}
-          />
+        {/* PROTECTED SAYFALAR (GİRİŞ ŞART) */}
+        {activePage === 'giris' && (
+          <ProtectedRoute token={token} onLogout={handleCikisYap}>
+            <NewPassword
+              matrixSize={matrixSize}
+              savePassword={sifreKaydet}
+            />
+          </ProtectedRoute>
         )}
 
-        {aktifSayfa === 'ayarlar' && (
-          <Ayarlar matrixSize={matrixSize} setMatrixSize={setMatrixSize} />
+        {activePage === 'sifrelerim' && (
+          <ProtectedRoute token={token} onLogout={handleCikisYap}>
+            <Passwords
+              passwordsList={savedPasswords}
+              goToPasswordDetail={sifreDetayinaGit}
+              deletePassword={sifreSil}
+            />
+          </ProtectedRoute>
+        )}
+
+        {activePage === 'sifreDetay' && (
+          <ProtectedRoute token={token} onLogout={handleCikisYap}>
+            <PasswordDetail
+              selectedPasswordId={selectedPasswordId}
+              matrixSize={matrixSize}
+              setActivePage={setActivePage}
+              token={token}
+            />
+          </ProtectedRoute>
+        )}
+
+        {activePage === 'sizintiAnalizi' && (
+          <ProtectedRoute token={token} onLogout={handleCikisYap}>
+            <BreachAnalysis token={token} />
+          </ProtectedRoute>
+        )}
+
+        {activePage === 'ayarlar' && (
+          <ProtectedRoute token={token} onLogout={handleCikisYap}>
+            <Settings matrixSize={matrixSize} setMatrixSize={setMatrixSize} />
+          </ProtectedRoute>
         )}
       </div>
     </div>

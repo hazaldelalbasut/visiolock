@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import CizimMatrisi from '../components/CizimMatrisi'
-import KriptoSifreCard from '../components/KriptoSifreCard'
-import './Giris.css'
+import DrawingMatrix from '../components/DrawingMatrix'
+import CryptoPasswordCard from '../components/CryptoPasswordCard'
+import './NewPassword.css'
 
-function Giris({ matrixSize, sifreKaydet }) {
-  const [secilenNoktalar, setSecilenNoktalar] = useState([])
-  const [hizmetAdi, setHizmetAdi] = useState('')
-const [kullaniciAdi, setKullaniciAdi] = useState('')
+function NewPassword({ matrixSize, savePassword }) {
+  const [selectedPoints, setSelectedPoints] = useState([])
+  const [serviceName, setServiceName] = useState('')
+const [username, setUsername] = useState('')
   return (
     <div className="matris-kapsayici">
       <div className="matris-sol-kolon">
@@ -25,33 +25,33 @@ const [kullaniciAdi, setKullaniciAdi] = useState('')
             <input
               type="text"
               placeholder="Hizmet adı girin (Örn: Instagram, Gmail)"
-              value={hizmetAdi}
-              onChange={(e) => setHizmetAdi(e.target.value)}
+              value={serviceName}
+              onChange={(e) => setServiceName(e.target.value)}
             />
             <input
               type="text"
               placeholder="O hizmetteki kullanıcı adınız"
-              value={kullaniciAdi}
-              onChange={(e) => setKullaniciAdi(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="matris-icerik">
-            <CizimMatrisi matrixSize={matrixSize} onCizimDegisti={setSecilenNoktalar} />
+            <DrawingMatrix matrixSize={matrixSize} onDrawingChange={setSelectedPoints} />
           </div>
         </div>
       </div>
 
       <div className="matris-sag-kolon">
-        <KriptoSifreCard
-          hizmetAdi={hizmetAdi}
-          kullaniciAdi={kullaniciAdi}
-          cizimYolu={secilenNoktalar}
+        <CryptoPasswordCard
+          serviceName={serviceName}
+          username={username}
+          drawingPath={selectedPoints}
           matrixSize={matrixSize}
-          onSifreKaydet={sifreKaydet}
+          onSavePassword={savePassword}
         />
       </div>
     </div>
   )
 }
 
-export default Giris
+export default NewPassword

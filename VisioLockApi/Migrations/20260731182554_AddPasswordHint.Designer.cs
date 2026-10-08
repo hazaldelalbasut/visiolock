@@ -12,8 +12,8 @@ using VisioLockApi.Data;
 namespace VisioLockApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260722113808_KullaniciEkle")]
-    partial class KullaniciEkle
+    [Migration("20260731182554_AddPasswordHint")]
+    partial class AddPasswordHint
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,83 +25,91 @@ namespace VisioLockApi.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("VisioLockApi.Models.Kullanici", b =>
+            modelBuilder.Entity("VisioLockApi.Models.PasswordRecord", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("EntropyBits")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Hint")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("MatrixSize")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ServiceName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ServiceUsername")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("VerificationHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PasswordRecords");
+                });
+
+            modelBuilder.Entity("VisioLockApi.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("OlusturmaTarihi")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<string>("SifreHash")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Kullanicilar");
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("VisioLockApi.Models.SifreKaydi", b =>
+            modelBuilder.Entity("VisioLockApi.Models.PasswordRecord", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("DogrulamaHash")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("EntropiBit")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("HizmetAdi")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("KullaniciAdiHizmette")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("KullaniciId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MatrixBoyutu")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("OlusturmaTarihi")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("KullaniciId");
-
-                    b.ToTable("SifreKayitlari");
-                });
-
-            modelBuilder.Entity("VisioLockApi.Models.SifreKaydi", b =>
-                {
-                    b.HasOne("VisioLockApi.Models.Kullanici", "Kullanici")
-                        .WithMany("SifreKayitlari")
-                        .HasForeignKey("KullaniciId")
+                    b.HasOne("VisioLockApi.Models.User", "User")
+                        .WithMany("PasswordRecords")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Kullanici");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("VisioLockApi.Models.Kullanici", b =>
+            modelBuilder.Entity("VisioLockApi.Models.User", b =>
                 {
-                    b.Navigation("SifreKayitlari");
+                    b.Navigation("PasswordRecords");
                 });
 #pragma warning restore 612, 618
         }

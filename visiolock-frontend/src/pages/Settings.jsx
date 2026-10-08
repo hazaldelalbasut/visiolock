@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import './Ayarlar.css'
+import './Settings.css'
 
-function Ayarlar({ matrixSize, setMatrixSize }) {
-  const [panoSuresi, setPanoSuresi] = useState(30)
+function Settings({ matrixSize, setMatrixSize }) {
+  const [clipboardDuration, setClipboardDuration] = useState(30)
 
   return (
     <div className="ayarlar-kapsayici">
@@ -36,15 +36,15 @@ function Ayarlar({ matrixSize, setMatrixSize }) {
           <div className="ayar-grubu">
             <div className="etiket-satiri">
               <label className="ayar-etiket">PANO TEMİZLEME SÜRESİ</label>
-              <span className="sure-deger">{panoSuresi} Saniye</span>
+              <span className="sure-deger">{clipboardDuration} Saniye</span>
             </div>
             <div className="slider-kapsayici">
               <input
                 type="range"
                 min="5"
                 max="60"
-                value={panoSuresi}
-                onChange={(e) => setPanoSuresi(Number(e.target.value))}
+                value={clipboardDuration}
+                onChange={(e) => setClipboardDuration(Number(e.target.value))}
                 className="ayar-slider"
               />
             </div>
@@ -63,4 +63,4 @@ function Ayarlar({ matrixSize, setMatrixSize }) {
   )
 }
 
-export default Ayarlar
+export default Settings
